@@ -1,0 +1,159 @@
+﻿@using MessageSender.Models
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    textarea {
+        width: 350px;
+        height: 175px;
+        resize: none;
+        background: #dad7c5;
+        padding: 0 10px;
+    }
+
+    div {
+        float: left;
+    }
+
+    input {
+        width: 350px;
+        background: #dad7c5;
+        padding: 0 10px;
+    }
+
+    .form_message {
+        float: left;
+    }
+
+    .form_serch {
+        float: left;
+        margin-left: 10px;
+    }
+
+    .btn {
+        background: -moz-linear-gradient(#D0ECF4, #5BC9E1, #D0ECF4);
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(#BF8D30), to(#FFCE73), color-stop(0.5, #BF8D30));
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#BF6830', endColorstr='#FFAA73');
+        padding: 3px 7px;
+        color: #333;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        border: 1px solid #666;
+    }
+    table {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        text-align: left;
+        border-collapse: separate;
+        border-spacing: 5px;
+        background: #ECE9E0;
+        color: #656665;
+        border: 16px solid #ECE9E0;
+        border-radius: 20px;
+    }
+</style>
+
+<body >
+    <div class="text-center" >
+        <div>
+            <p>Sending Message</p>
+           
+            <form id="Message" action="/Home/SendMessage" class="signin-form">
+
+                <div>
+                    <p><input name="UserName" placeholder="UserName" /></p>
+                    <p><textarea placeholder="Write your message" rows="5" id="TextMessage" name="TextMessage" required></textarea></p>
+
+                </div>
+                <p>
+                    <button class="btn">Send</button>
+                </p>
+
+            </form>
+           
+                <table id="table">
+                    <thead>
+                        <tr>
+
+                            <td>UserID</td>
+                            <td>Message</td>
+                            <td>DateSending</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{int i = 0;
+                            foreach (Message m in ViewBag.AllMessages)
+                            {
+
+                                if (i == 20)
+                                {
+                                    break;
+                                }
+                                <tr data-id="@m.UserId">
+
+                                    <td>@m.UserId</td>
+                                    <td>@m.TextMessage</td>
+                                    <td>@m.DateSending</td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                    </tbody>
+                </table>
+        </div>
+            <div class="form_serch">
+                <p>Serching Message</p>
+                <form id="Message" action="/Home/Index" class="signin-form">
+
+                    <div>
+                        <p><input name="UserName" placeholder="UserName" /></p>
+                    </div>
+                    <p>
+                        <button class="btn">Send</button>
+                    </p>
+                    <table>
+                        <tr>
+
+                            <td>UserID</td>
+                            <td>Message</td>
+                            <td>DateSending</td>
+                        </tr>
+                        @if (ViewBag.UsersMessages != null || ViewBag.UsersMessages.Count != 0)
+                        {
+                            int j = 0;
+                            foreach (Message m in ViewBag.UsersMessages)
+                            {
+                                if (j == 10)
+                                {
+                                    break;
+                                }
+                                <tr>
+
+                                    <td>@m.UserId</td>
+                                    <td>@m.TextMessage</td>
+                                    <td>@m.DateSending</td>
+                                </tr>
+                                j++;
+                            }
+                        }
+                    </table>
+
+                </form>
+            </div>
+        
+    </div>
+</body>
+    @section scripts {
+        <script type="text/javascript">
+
+            let sortedRows = Array.from(table.rows)
+                .slice(1)
+                .sort((rowA, rowB) => rowA.cells[0].innerHTML > rowB.cells[0].innerHTML ? 1 : -1);
+
+            table.tBodies[0].append(...sortedRows);
+
+           
+        </script>
+
+    }
